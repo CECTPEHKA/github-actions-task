@@ -1,0 +1,29 @@
+name: Java CI with Maven
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone project
+        uses: actions/checkout@v4
+
+      - name: Install Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '11'
+          cache: maven
+
+      - name: Download dependencies
+        run: mvn dependency:go-offline
+
+      - name: Build project
+        run: mvn package -DskipTests
+
+      - name: Run unit tests
+        run: mvn test
